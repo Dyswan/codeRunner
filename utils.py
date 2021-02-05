@@ -1,9 +1,5 @@
 import _judger
 import os
-import json
-import socket
-import time
-import threading
 from config import Language, Type
 
 def compileCPP(id,code,judgername):

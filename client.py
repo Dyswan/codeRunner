@@ -1,6 +1,5 @@
 import sys
 sys.path.append('./gen-py')
-import json 
 from codeRunner import codeRunner
 from codeRunner.ttypes import *
 from codeRunner.constants import *

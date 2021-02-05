@@ -22,17 +22,16 @@ class codeRunnerHandler(codeRunner_grpc.codeRunnerServicer):
             language_ = Language.Java 
         code_ = codeRunnerRequest.code_
         input_ = codeRunnerRequest.input_
-        res = codeRunnerRespone()
-        (type_, res.result_) = runner(language_, code_, input_,  "test")
-        res.type_ = resultType._NAMES_TO_VALUES[type_.name]
+        (type_, result_) = runner(language_, code_, input_,  "test")
+        res = codeRunner.codeRunnerRespone(type_=type_, result_=result_)
+
         return res
 
 if __name__=="__main__":
-    handler = codeRunnerHandler()
-    server = grpc.Server(futures.ThreadPoolExecutor(max_workers=10))
-    codeRunner_pb2_grpc.add_codeRunnerServicer_to_server(
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=4))
+    codeRunner_grpc.add_codeRunnerServicer_to_server(
         codeRunnerHandler(), server)
-    server.add_insecure_port('[::]8233')
+    server.add_insecure_port('[::]:8233')
     server.start()
     print("Starting python server...")
     server.wait_for_termination()

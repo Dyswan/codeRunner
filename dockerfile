@@ -14,5 +14,7 @@ RUN apt-get install time -y
 RUN apt-get install cmake -y
 RUN apt-get install openjdk-8-jdk -y
 RUN apt-get install libseccomp-dev -y && cd ./JudgerCore && mkdir build && cd build && cmake .. && make && make install && cd ../bindings/Python && python3 setup.py install
-RUN pip3 install thrift
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install grpcio
+RUN python3 -m pip install grpcio-tools
 CMD ["python3", "server.py"]
