@@ -1,24 +1,18 @@
 import sys
-sys.path.append('./gen-py')
+sys.path.append('./proto')
 
-import json
-from codeRunner import codeRunner
-from codeRunner.ttypes import *
-from thrift.transport import TSocket
-from thrift.transport import TTransport
-from thrift.protocol import TBinaryProtocol
-from thrift.server import TServer
+from concurrent import futures
 from utils import runner
-import socket
-from config import Language, Type
-
-
-class codeRunnerHandler:
+from config import Language
+import grpc
+import codeRunner_pb2 as codeRunner
+import codeRunner_pb2_grpc as codeRunner_grpc
+class codeRunnerHandler(codeRunner_grpc.codeRunnerServicer):
     def __init__(self):
         self.num = 0
         self.log = {}
 
-    def judge(self, codeRunnerRequest):
+    def judge(self, codeRunnerRequest, context):
         # self.num += 1
         language_ = codeRunnerRequest.language_
 
@@ -28,18 +22,16 @@ class codeRunnerHandler:
             language_ = Language.Java 
         code_ = codeRunnerRequest.code_
         input_ = codeRunnerRequest.input_
-        res = codeRunnerRespone()
-        (type_, res.result_) = runner(language_, code_, input_,  "test")
-        res.type_ = resultType._NAMES_TO_VALUES[type_.name]
+        (type_, result_) = runner(language_, code_, input_,  "test")
+        res = codeRunner.codeRunnerRespone(type_=type_, result_=result_)
+
         return res
 
 if __name__=="__main__":
-    handler = codeRunnerHandler()
-    processor = codeRunner.Processor(handler)
-    #transport = TSocket.TServerSocket('172.16.0.4', 8233)
-    transport = TSocket.TServerSocket('0.0.0.0', 8233)
-    tfactory = TTransport.TBufferedTransportFactory()
-    pfactory = TBinaryProtocol.TBinaryProtocolFactory()
-    server = TServer.TSimpleServer(processor, transport, tfactory, pfactory)
+    server = grpc.server(futures.ThreadPoolExecutor(max_workers=4))
+    codeRunner_grpc.add_codeRunnerServicer_to_server(
+        codeRunnerHandler(), server)
+    server.add_insecure_port('[::]:8233')
+    server.start()
     print("Starting python server...")
-    server.serve()
+    server.wait_for_termination()

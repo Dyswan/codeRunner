@@ -1,0 +1,31 @@
+syntax = "proto3";
+package CodeRunner;
+
+enum codeLanguage{
+    Cpp = 0;
+    Java = 1;
+}
+
+enum resultType{
+    Sucess = 0;
+    Compile_Error = 1;
+    Runtime_Error = 2;
+    Time_Limit_Exceeded = 3;
+    Memory_Limit_Exceeded = 4;
+    System_Error = 5;
+}
+
+message codeRunnerRequest{
+    codeLanguage language_ = 1;
+    string code_ = 2;
+    string input_ = 3;
+}
+
+message codeRunnerRespone{
+    resultType type_ = 1;
+    string result_ = 2;
+}
+
+service codeRunner{
+    rpc judge(codeRunnerRequest) returns(codeRunnerRespone) {}
+}
