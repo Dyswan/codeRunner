@@ -1,8 +1,2 @@
 #include <iostream>
-using namespace std;
-int main(){
-    //while(1){
-    cout<<"1"<<endl;
-    //}
-}
-    
+int main() {std::cout << 1 << std::endl;return 0;}
