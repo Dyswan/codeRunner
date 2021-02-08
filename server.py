@@ -23,7 +23,7 @@ class codeRunnerHandler(codeRunner_grpc.codeRunnerServicer):
             language_ = Language.Java 
         code_ = codeRunnerRequest.code_
         input_ = codeRunnerRequest.input_
-        (type_, result_) = runner(language_, code_, input_,  "./workplace/test")
+        (type_, result_) = runner(language_, code_, input_,  "./workplace/Main")
         res = codeRunner.codeRunnerRespone()
         if type_ is Type.Sucess:
             res.type_ = codeRunner.resultType.Sucess

@@ -19,7 +19,7 @@ def compileCPP(id,code,judgername):
     return True
 
 def compileJava(id,code,judgername):
-    file = open("Main.java", "w",encoding='utf-8')
+    file = open("%s.java"%judgername, "w",encoding='utf-8')
     file.write(code)
     file.close()
 
@@ -27,7 +27,7 @@ def compileJava(id,code,judgername):
     if not isExists:
         os.makedirs(judgername)
 
-    result = os.system("javac Main.java -d %s 2>%sce.txt" % (judgername, judgername))
+    result = os.system("javac %s.java -d %s 2>%sce.txt" % (judgername, judgername, judgername))
 
     if result:
         try:
@@ -129,14 +129,24 @@ def runner(lang, code, Input, judgername):
 
 
 if __name__ == "__main__":
-    code='''#include <iostream>
-using namespace std;
-int main(){
-    //while(1){
-    cout<<"1"<<endl;
-    //}
+#     code='''#include <iostream>
+# using namespace std;
+# int main(){
+#     int n;
+#     cin>>n;
+#     //while(1){
+#     for(int i=1;i<=n;i++) cout<<i<<endl;
+#     //}
+# }
+# #     '''
+    code='''class Main {
+    public static void main(String[] args) {
+        System.out.println("Hello World");
+    }
 }
     '''
     print(code)
-    print(runner(Language.Cpp, code, "","./workplace/test"))
+    (x,y) = runner(Language.Java, code, "","./workplace/Main")
+    print(x)
+    print(y)
             
