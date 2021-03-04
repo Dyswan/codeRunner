@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  
+  codeRunner:
+    image: "judger:v2.0"
+    expose:
+     - "8233"
+
+  nginx:
+    image: nginx:latest
+    volumes:
+        - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+        - codeRunner
+    ports:
+        - "8233:8233"

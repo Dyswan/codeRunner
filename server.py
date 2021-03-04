@@ -14,7 +14,6 @@ class codeRunnerHandler(codeRunner_grpc.codeRunnerServicer):
         self.log = {}
 
     def judge(self, codeRunnerRequest, context):
-        # self.num += 1
         print("getCode----")
         language_ = codeRunnerRequest.language_
         if language_ == codeRunner.codeLanguage.Cpp:

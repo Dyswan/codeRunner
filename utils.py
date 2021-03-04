@@ -84,6 +84,12 @@ def judgeJava(timelimit, memorylimit, inputpath, outputpath, errorpath, judgerna
                         gid=0
                         )
 
+def GetMessageFromFile(fileName):
+    fileout = open(fileName, "r")
+    msg = str(fileout.read())
+    fileout.close()
+    return msg
+
 def runner(lang, code, Input, judgername):
     ret = []
     timelimit = 10000
@@ -113,17 +119,15 @@ def runner(lang, code, Input, judgername):
         ret = judgeJava(timelimit*3, memorylimit, "./%s.in"%judgername, judgername+"temp.out", judgername+"error.out", judgername)
 
     if ret["result"] == 2 or ret["result"] == 1:
-        return (Type.Time_Limit_Exceeded, "")
+        return (Type.Time_Limit_Exceeded, GetMessageFromFile(judgername+"error.out"))
     elif ret["result"] == 3:
-        return (Type.Memory_Limit_Exceeded, "")
+        return (Type.Memory_Limit_Exceeded, GetMessageFromFile(judgername+"error.out"))
     elif ret["result"] == 4:
-        return (Type.Runtime_Error, "")
+        return (Type.Runtime_Error, GetMessageFromFile(judgername+"error.out"))
     elif ret["result"] == 5:
-        return (Type.System_Error, "")
+        return (Type.System_Error, GetMessageFromFile(judgername+"error.out"))
     else:
-        fileout = open(judgername+"temp.out", "r")
-        msg = str(fileout.read())
-        return (Type.Sucess, msg)
+        return (Type.Sucess, GetMessageFromFile(judgername+"temp.out"))
     return msg
 
 
